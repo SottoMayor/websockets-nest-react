@@ -1,5 +1,6 @@
 import { Button, Card, Col, Container, Nav, Navbar, Row } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useEffect, useState } from 'react';
 
 function Header () {
   return (
@@ -39,7 +40,44 @@ function Footer() {
   )
 }
 
+interface User {
+  id: number;
+  name: string;
+}
+
 function App() {
+
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch('http://localhost:3000/users');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(data)
+        setUsers(data.users);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          console.error(err.message);
+          setError(err.message);
+        } else {
+          console.error('Erro desconhecido:', err);
+        }
+      }
+      setLoading(false);
+    }
+
+    fetchData();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
 
   return (
     <main className='d-flex flex-column vh-100'>
@@ -50,44 +88,23 @@ function App() {
         <h2>Users</h2>
 
         <div className='d-flex gap-3'>
-          <Card style={{ width: '18rem' }}>
-            <Card.Body>
-              <Card.Title>User X</Card.Title>
-              <Card.Text>
-                Name: John Doe
-              </Card.Text>
-              <Card.Text>
-                ID: {`#1`}
-              </Card.Text>
-              <Button variant="primary">Go somewhere</Button>
-            </Card.Body>
-          </Card>
 
-          <Card style={{ width: '18rem' }}>
-            <Card.Body>
-              <Card.Title>User X</Card.Title>
-              <Card.Text>
-                Name: John Doe
-              </Card.Text>
-              <Card.Text>
-                ID: {`#1`}
-              </Card.Text>
-              <Button variant="primary">Go somewhere</Button>
-            </Card.Body>
-          </Card>
-
-          <Card style={{ width: '18rem' }}>
-            <Card.Body>
-              <Card.Title>User X</Card.Title>
-              <Card.Text>
-                Name: John Doe
-              </Card.Text>
-              <Card.Text>
-                ID: {`#1`}
-              </Card.Text>
-              <Button variant="primary">Go somewhere</Button>
-            </Card.Body>
-          </Card>
+          { 
+            users.map((user, index) => (
+              <Card key={index} style={{ width: '18rem' }}>
+                <Card.Body>
+                  <Card.Title>User {index + 1}</Card.Title>
+                  <Card.Text>
+                    Name: {user.name}
+                  </Card.Text>
+                  <Card.Text>
+                    ID: {`#${user.id}`}
+                  </Card.Text>
+                  <Button variant="primary">Go somewhere</Button>
+                </Card.Body>
+              </Card>
+            ))
+          }
 
         </div>
         
