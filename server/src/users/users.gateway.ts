@@ -1,9 +1,11 @@
-import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
+import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { Server } from 'http';
 
 @WebSocketGateway()
 export class UsersGateway {
-  @SubscribeMessage('message')
-  handleMessage(client: any, payload: any): string {
-    return 'Hello world!';
+   @WebSocketServer() server: Server;
+
+  notifyNewUser(user: { name: string, id: number }) {
+    this.server.emit('newUser', { action: 'notify_new_user', ...user }); 
   }
 }
