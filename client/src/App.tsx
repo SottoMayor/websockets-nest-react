@@ -1,6 +1,7 @@
 import { Button, Card, Col, Container, Nav, Navbar, Row } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from 'react';
+import io from 'socket.io-client';
 
 function Header () {
   return (
@@ -71,9 +72,23 @@ function App() {
       }
       setLoading(false);
     }
-
+    
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const socket = io('http://localhost:3000');
+
+    socket.on('newUser', (newUser) => {
+      console.log('Novo usuário recebido:', newUser);
+      setUsers((prevUsers) => [...prevUsers, newUser]);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
