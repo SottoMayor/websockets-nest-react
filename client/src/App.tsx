@@ -51,6 +51,7 @@ function App() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [newUsersAmount, setNewUsersAmount] = useState(0);
 
   useEffect(() => {
     async function fetchData() {
@@ -82,6 +83,7 @@ function App() {
     socket.on('newUser', (newUser) => {
       console.log('Novo usuário recebido:', newUser);
       setUsers((prevUsers) => [...prevUsers, newUser]);
+      setNewUsersAmount(prevCount => prevCount + 1);
     });
 
     return () => {
@@ -100,7 +102,36 @@ function App() {
       {Header()}
 
       <Container className="flex-grow-1 flex-column gap-3 d-flex align-items-left justify-content-start">
+      <div className='d-flex justify-content-between'>
         <h2>Users</h2>
+
+        <div className='mt-2 d-flex gap-3'>
+          <div
+            className="btn btn-outline-primary"
+            style={{
+              cursor: 'default',
+              userSelect: 'none', 
+            }}
+          >
+            New users: { newUsersAmount }
+          </div>
+
+          <div
+            className="btn btn-outline-primary"
+            style={{
+              cursor: 'default',
+              userSelect: 'none', 
+            }}
+          >
+            Total Users: { users.length }
+          </div>
+        </div>
+        
+
+      </div>
+
+      
+        
 
         <div className='d-flex gap-3'>
 
