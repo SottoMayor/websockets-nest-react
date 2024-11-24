@@ -1,9 +1,11 @@
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'http';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @WebSocketGateway({
   cors: {
-    origin: 'http://localhost:5173', // Substitua pelo endereço do seu frontend
+    origin: process.env.FRONTEND_URL,
     methods: ['GET', 'POST'],
     credentials: true,
   } 
