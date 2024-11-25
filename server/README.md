@@ -22,8 +22,17 @@
 
 6) Habilitação do CORS http no main.ts
 
+## Observações
+
+- Neste app, não existe outro módulo além do users, poranto o gateway foi definido dentro deste módulo.
+- Uma abordagem interessante: Faça a DI do gateway no controller. 
+	- 1) Regra de negócio com o service.
+   	- 2) Dispare o gateway para o push de dados.
+   	- 3) Retorne os dados do service no controller.
+- Existem outras abordagens, como injetar o gateway no service. Mas, ao usar a _abordagem interessante_ fica claro que o push ocorre após as lógicas de negócio serem processadas.
+
 # CORS
-Algumas alternativas para habilitar o CORS usando websockets. É um objeto ou boleano que seta a sua configuração dentro do decorator `@WebSocketGateway({cors: {...props}})`.   
+As alternativas para habilitar o CORS usando websockets são um objeto ou boleano, sua configuração é definida dentro do decorator `@WebSocketGateway({cors: {...props}})`.   
 
 1) **Apenas para desenvolvimento**: 
   - A opção `@WebSocketGateway({cors: true})` funciona, mas pode não ser o ideal em questões de segurança.
@@ -36,4 +45,17 @@ Algumas alternativas para habilitar o CORS usando websockets. É um objeto ou bo
     - Passos:    
       - `npm install @nestjs/config`.
       - Criação do .env e definição da env. var. `FRONTEND_URL`.   
-      - Carregando das env. vars. por meio do dotenv.   
+      - Carregando das env. vars. por meio do dotenv.
+     
+# WebSocket Gateway no NestJS
+- Semelhante a um Controller para o WebSocket, mas com foco na comunicação em tempo real.   
+- O Gateway é responsável por gerenciar as conexões WebSocket e lidar com os eventos de comunicação bidirecional em tempo real.   
+
+## Considerações sobre o WebSocket Gateway
+1) Dependendo da aplicação, não há necessidade de mais de um gateway. Um é suficiente pra abrir múltiplos `channels` e `actions`.   
+2) Pode ser interessante criar um módulo separado para o gateway, especialmente se o WebSocket for usado em outros módulos.   
+3) Pode ser interessante criar um serviço dentro desse módulo de gateway, caso haja necessidade de processar alguma regra de negócio antes de enviar os dados.
+4) Situações para se ter mais de um arquivo de gateway:
+	- Quando há domínios de negócios completamente distintos que precisam de isolamento.
+	- Diferentes protocolos ou configurações específicas.
+
