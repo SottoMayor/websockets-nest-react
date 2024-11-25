@@ -1,3 +1,11 @@
+# Execução do projeto
+1. Importar a collection da pasta root no insomnia.   
+2. Inicializar o server: `/server` => `npm run start:dev`.
+     - Opcional: criar pelo menos 1 user via insomnia neste passo.    
+3. Inicializar o client: `/client` => `npm run dev`.   
+     - Se tiver feito o opcional do passo anterior, os usuários já criados vão carregar na tela.   
+4. Com server e client rodando, para novas inclusões de users o websocket gerencia o push de dados, possibilitando a UI atualizar a tela.   
+
 # WebSockets
 
 - **Definição**: WebSocket é um protocolo de comunicação sobre HTTP, permitindo comunicação bidirecional em tempo real entre cliente e servidor.
